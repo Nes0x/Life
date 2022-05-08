@@ -1,0 +1,26 @@
+messages:
+  command-in-console: '&cNie możesz wykonać tej komendy w konsoli!'
+  no-life-placeholder: '&cUważaj! Masz ostatnie życie.'
+  unknown-player: '&cTen gracz nie grał na serwerze!'
+  number-of-life: '&aTwoja ilość żyć to: %life%'
+  number-of-life-player: '&aIlość żyć gracza %player% wynosi: %life%'
+  no-permission: '&cNie masz wystarczających permisji!'
+  add-life-success: '&aDodałeś graczowi %player% %number% żyć!'
+  remove-life-success: '&cUsunąłeś graczowi %player% %number% żyć!'
+  set-life-success: '&cUstawiłeś graczowi %player% %number% żyć!'
+  invalid-usage: '&cZłe wykonanie komendy!!'
+  perm-ban-reason: '&cZostałeś zbanowany pernamentnie za brak żyć!'
+  temp-ban-reason: '&cZostałeś zbanowany za brak żyć. Ban mija za %time%'
+  reload-message: '&aPomyślnie przeładowano config!'
+  number-exception: '&cPodany tekst nie jest liczbą!'
+  life-number-exception: '&cPodana liczba nie jest dodatnia!'
+  days: '&cdzień/dni'
+  hours: '&cgodzin/e'
+  minutes: '&cminut/y'
+
+ban:
+  perm: false
+  days: 0
+  hours: 1
+  minutes: 1
+
