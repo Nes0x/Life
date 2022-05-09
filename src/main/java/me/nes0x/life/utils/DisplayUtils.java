@@ -27,9 +27,6 @@ public class DisplayUtils {
         } else {
             timeToReturn.append(time).append(" ").append(fixColors(config.getString("messages.minutes"))).append(" ");
         }
-
-
-
         return timeToReturn.toString();
     }
 }

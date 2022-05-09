@@ -1,7 +1,9 @@
 package me.nes0x.life.utils;
 
 import me.nes0x.life.Main;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +23,7 @@ public class LifeManager {
             try {
                 user.createNewFile();
                 userData = YamlConfiguration.loadConfiguration(user);
-                userData.set("life", 3);
+                userData.set("life", main.getConfig().getInt("settings.starting-life-number"));
                 userData.set("perm", false);
                 userData.set("ban-expiration", 0);
                 userData.save(user);
@@ -112,6 +114,9 @@ public class LifeManager {
             exception.printStackTrace();
         }
     }
+
+
+
 
 
 

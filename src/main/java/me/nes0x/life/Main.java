@@ -4,6 +4,7 @@ package me.nes0x.life;
 import me.nes0x.life.commands.Life;
 import me.nes0x.life.commands.LifeTabComplete;
 import me.nes0x.life.listeners.PlayerDeath;
+import me.nes0x.life.listeners.PlayerInteract;
 import me.nes0x.life.listeners.PlayerLogin;
 import me.nes0x.life.listeners.PlayerRespawn;
 import me.nes0x.life.utils.Placeholders;
@@ -36,6 +37,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerLogin(this), this);
         getServer().getPluginManager().registerEvents(new PlayerRespawn(this), this);
         getServer().getPluginManager().registerEvents(new PlayerDeath(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerInteract(this), this);
 
 
     }

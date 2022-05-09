@@ -15,6 +15,7 @@ public class LifeTabComplete implements TabCompleter {
     public List<String> onTabComplete(final CommandSender commandSender, final Command command, final String s, final String[] args) {
         List<String> completions = new ArrayList<>();
         if (args.length == 1) {
+
             if (commandSender.hasPermission("life.commands.add")) {
                 completions.add("add");
             }
@@ -26,6 +27,9 @@ public class LifeTabComplete implements TabCompleter {
             }
             if (commandSender.hasPermission("life.commands.reload")) {
                 completions.add("reload");
+            }
+            if (commandSender.hasPermission("life.commands.item")) {
+                completions.add("item");
             }
             Bukkit.getOnlinePlayers().forEach(player -> completions.add(player.getName()));
             return StringUtil.copyPartialMatches(args[0], new ArrayList<>(), completions);

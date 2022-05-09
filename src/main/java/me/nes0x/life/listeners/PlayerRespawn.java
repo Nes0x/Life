@@ -24,13 +24,13 @@ public class PlayerRespawn implements Listener {
     }
 
     @EventHandler
-    public void checkLifeOnRespawn(PlayerRespawnEvent event) {
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
 
         Player player = event.getPlayer();
         LifeManager manager = new LifeManager(player.getUniqueId(), main);
 
 
-        if (manager.getLife() <= 0) {
+        if (manager.getLife() == 0) {
             FileConfiguration config = main.getConfig();
             String kickMessage;
             if (config.getBoolean("ban.perm")) {
@@ -52,7 +52,6 @@ public class PlayerRespawn implements Listener {
                 ), config));
             }
 
-            manager.setLife(0);
             Bukkit.getScheduler().runTaskLater(main, () -> {
                 player.kickPlayer(fixColors(kickMessage));
             }, 20);

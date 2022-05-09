@@ -37,18 +37,19 @@ public class Placeholders extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer player, String params) {
         LifeManager manager = new LifeManager(player.getUniqueId(), main);
-        if (params.equalsIgnoreCase("life-hearts")){
+
+        if (params.equalsIgnoreCase("life-heart") || params.equalsIgnoreCase("life-number")) {
             if (manager.getLife() == 0 || manager.getLife() == 1) {
                 return DisplayUtils.fixColors(main.getConfig().getString("messages.no-life-placeholder"));
             }
-
-            StringBuilder hearts = new StringBuilder();
-            for (int i = 0; i < manager.getLife(); i++) {
-                hearts.append(ChatColor.RED).append("\u2665");
-            }
-            return hearts.toString();
         }
 
+        switch (params.toLowerCase()) {
+            case "life-heart":
+                return "\u2665".repeat(Math.max(0, manager.getLife()));
+            case "life-number":
+                return String.valueOf(manager.getLife());
+        }
         return null;
     }
 

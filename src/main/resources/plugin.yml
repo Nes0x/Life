@@ -22,6 +22,9 @@ permissions:
   life.commands.set:
     description: Permission to command /life set <nick <number>
     default: op
+  life.commands.item:
+    description: Permission to command /life item
+    default: op
   life.commands.reload:
     description: Permission to command /life reload
     default: op

@@ -2,6 +2,7 @@ package me.nes0x.life.commands;
 
 import me.nes0x.life.Main;
 import me.nes0x.life.utils.DisplayUtils;
+import me.nes0x.life.utils.ItemUtils;
 import me.nes0x.life.utils.LifeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -79,6 +80,14 @@ public class Life implements CommandExecutor {
             main.saveConfig();
             player.sendMessage(fixColors(config.getString("messages.reload-message")));
             return true;
+        } else if (args.length == 1 && args[0].equalsIgnoreCase("item"))  {
+            if (!player.hasPermission("life.commands.item")) {
+                player.sendMessage((fixColors(config.getString("messages.no-permission"))));
+                return false;
+            }
+
+            player.getInventory().addItem(ItemUtils.getLifeAddItem(config, config.getInt("add-life-item.number")));
+            player.sendMessage(fixColors(config.getString("messages.item-add-life-success")));
         } else if (args.length == 1) {
 
             if (Bukkit.getOfflinePlayer(args[0]).hasPlayedBefore()) {
