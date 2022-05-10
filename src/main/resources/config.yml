@@ -40,3 +40,8 @@ add-life-item:
   number: 1
   lore:
     - '&aKliknij aby uzyskać %number% żyć'
+
+world-guard:
+  enabled: true
+  regions:
+    - 'spawn'

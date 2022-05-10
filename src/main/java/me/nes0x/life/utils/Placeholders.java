@@ -1,9 +1,8 @@
 package me.nes0x.life.utils;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import me.nes0x.life.Main;
+import org.bukkit.OfflinePlayer;
 
 public class Placeholders extends PlaceholderExpansion {
     private final Main main;
@@ -20,12 +19,12 @@ public class Placeholders extends PlaceholderExpansion {
 
     @Override
     public String getAuthor() {
-        return "Nes0x";
+        return main.getDescription().getAuthors().toString();
     }
 
     @Override
     public String getVersion() {
-        return "1.0";
+        return main.getDescription().getVersion();
     }
 
     @Override
@@ -36,6 +35,9 @@ public class Placeholders extends PlaceholderExpansion {
 
     @Override
     public String onRequest(OfflinePlayer player, String params) {
+        if (!player.hasPlayedBefore()) {
+            return  null;
+        }
         LifeManager manager = new LifeManager(player.getUniqueId(), main);
 
         if (params.equalsIgnoreCase("life-heart") || params.equalsIgnoreCase("life-number")) {
