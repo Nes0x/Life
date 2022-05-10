@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class LifeManager {
     private YamlConfiguration userData;
@@ -50,6 +51,10 @@ public class LifeManager {
 
     public long getBanExpiration() {
         return banExpiration;
+    }
+
+    public int getBanTime() {
+        return (int) TimeUnit.MILLISECONDS.toMinutes(banExpiration - System.currentTimeMillis());
     }
 
     public void setPerm(boolean perm) {
@@ -114,10 +119,5 @@ public class LifeManager {
             exception.printStackTrace();
         }
     }
-
-
-
-
-
 
 }

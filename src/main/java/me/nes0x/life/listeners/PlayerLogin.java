@@ -40,7 +40,7 @@ public class PlayerLogin implements Listener {
             if (manager.isPerm()) {
                 event.disallow(PlayerLoginEvent.Result.KICK_BANNED, DisplayUtils.fixColors(config.getString("messages.perm-ban-reason")));
             } else {
-                int minutes = (int) TimeUnit.MILLISECONDS.toMinutes(manager.getBanExpiration() - System.currentTimeMillis());
+                int minutes = manager.getBanTime();
                 if (minutes < 0) {
                     event.allow();
                     manager.setBanExpiration(0);

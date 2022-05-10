@@ -25,7 +25,6 @@ public final class Main extends JavaPlugin {
         if (!usersFolder.exists()) {
             usersFolder.mkdir();
         }
-
         getConfig().options().copyDefaults(true);
         saveConfig();
         reloadConfig();

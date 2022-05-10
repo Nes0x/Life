@@ -148,6 +148,30 @@ public class Life implements CommandExecutor {
                     manager.setLife(number);
                     player.sendMessage(fixColors(config.getString("messages.set-life-success").replace("%player%", target.getName()).replace("%number%", String.valueOf(number))));
                     break;
+                case "give":
+                    if (!player.hasPermission("life.commands.give")) {
+                        player.sendMessage(fixColors(config.getString("messages.no-permission")));
+                        return false;
+                    }
+                    if (target.getUniqueId().equals(player.getUniqueId())) {
+                        player.sendMessage(fixColors(config.getString("messages.self-give-life")));
+                        return false;
+                    }
+
+                    manager = new LifeManager(player.getUniqueId(), main);
+                    if (manager.getLife() > number || (manager.getLife() - number) <= 1) {
+                        manager.removeLife(number);
+                        manager = new LifeManager(target.getUniqueId(), main);
+                        manager.addLife(number);
+                        player.sendMessage(fixColors(config.getString("messages.give-life-success").replace("%target%", args[1]).replace("%number%", String.valueOf(number))));
+                        if (target.isOnline()) {
+                            target.getPlayer().sendMessage(fixColors(config.getString("messages.give-life-success-to-target").replace("%player%", player.getName()).replace("%number%", String.valueOf(number))));
+                        }
+                    } else {
+                        player.sendMessage(fixColors(config.getString("messages.give-life-error")));
+                    }
+
+                    break;
                 default:
                     player.sendMessage(fixColors(config.getString("messages.invalid-usage")));
                     return false;

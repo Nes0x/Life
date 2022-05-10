@@ -47,9 +47,7 @@ public class PlayerRespawn implements Listener {
                 manager.setBanExpiration(banDate);
                 kickMessage = config.getString("messages.temp-ban-reason").replace("%time%",
                         DisplayUtils.minutesToTime(
-                        (int)TimeUnit.MILLISECONDS.toMinutes(
-                        banDate - System.currentTimeMillis()
-                ), config));
+                        manager.getBanTime(), config));
             }
 
             Bukkit.getScheduler().runTaskLater(main, () -> {
