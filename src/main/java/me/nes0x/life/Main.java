@@ -35,7 +35,6 @@ public final class Main extends JavaPlugin {
         getCommand("life").setTabCompleter(new LifeTabComplete());
         getServer().getPluginManager().registerEvents(new PlayerLogin(this), this);
         getServer().getPluginManager().registerEvents(new PlayerRespawn(this), this);
-        getServer().getPluginManager().registerEvents(new PlayerDeath(this), this);
         getServer().getPluginManager().registerEvents(new PlayerInteract(this), this);
 
 
