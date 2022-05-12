@@ -7,10 +7,14 @@ import me.nes0x.life.listener.PlayerInteractListener;
 import me.nes0x.life.listener.PlayerLoginListener;
 import me.nes0x.life.listener.PlayerRespawnListener;
 import me.nes0x.life.util.Placeholder;
+import me.nes0x.life.util.Updater;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
+import java.nio.file.Files;
 
 import static me.nes0x.life.util.DisplayUtil.fixColors;
 
@@ -19,6 +23,13 @@ public final class Life extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        new Metrics(this, 15178);
+        new Updater(this, 0).getVersion(version -> {
+            if (!getDescription().getVersion().equals(version)) {
+                getLogger().info(ChatColor.RED + "New update available! https://www.spigotmc.org/resources/");
+            }
+        });
+
         getConfig().options().copyDefaults(true);
         saveConfig();
         reloadConfig();
@@ -29,10 +40,15 @@ public final class Life extends JavaPlugin {
 
         OutputStream outStream = null;
         try {
-            byte[] buffer = getResource("pl-config.yml").readAllBytes();
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            byte[] buffer = new byte[0xFFFF];
+            InputStream inputStream =  getResource("pl-config.yml");
+            for (int len = inputStream.read(buffer); len != -1; len = inputStream.read(buffer)) {
+                os.write(buffer, 0, len);
+            }
             File targetFile = new File(getDataFolder(), "./pl-config.yml");
-            outStream = new FileOutputStream(targetFile);
-            outStream.write(buffer);
+            outStream = Files.newOutputStream(targetFile.toPath());
+            outStream.write(os.toByteArray());
         } catch (IOException exception) {
             exception.printStackTrace();
         } finally {
