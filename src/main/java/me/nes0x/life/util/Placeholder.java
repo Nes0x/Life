@@ -2,6 +2,7 @@ package me.nes0x.life.util;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.nes0x.life.Life;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 
 public class Placeholder extends PlaceholderExpansion {
@@ -48,7 +49,11 @@ public class Placeholder extends PlaceholderExpansion {
 
         switch (params.toLowerCase()) {
             case "life-heart":
-                return "\u2665".repeat(Math.max(0, manager.getLife()));
+                StringBuilder hearts = new StringBuilder();
+                for (int i = 0; i < manager.getLife(); i++) {
+                    hearts.append("\u2665");
+                }
+                return hearts.toString();
             case "life-number":
                 return String.valueOf(manager.getLife());
         }
