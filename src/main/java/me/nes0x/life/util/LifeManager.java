@@ -1,9 +1,7 @@
-package me.nes0x.life.utils;
+package me.nes0x.life.util;
 
-import me.nes0x.life.Main;
-import org.bukkit.Material;
+import me.nes0x.life.Life;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +16,7 @@ public class LifeManager {
     private long banExpiration;
 
 
-    public LifeManager(UUID playerUUID, Main main) {
+    public LifeManager(UUID playerUUID, Life main) {
         user = new File(main.getDataFolder(), "./users/" + playerUUID + ".yml");
         if (!user.exists()) {
             try {

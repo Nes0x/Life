@@ -1,27 +1,19 @@
-package me.nes0x.life.listeners;
+package me.nes0x.life.listener;
 
-import me.nes0x.life.utils.DisplayUtils;
-import me.nes0x.life.utils.LifeManager;
-import org.bukkit.BanList;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import me.nes0x.life.util.DisplayUtil;
+import me.nes0x.life.util.LifeManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
-import me.nes0x.life.Main;
+import me.nes0x.life.Life;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
+public class PlayerLoginListener implements Listener {
+    private final Life main;
 
-public class PlayerLogin implements Listener {
-    private final Main main;
-
-    public PlayerLogin(final Main main) {
+    public PlayerLoginListener(final Life main) {
         this.main = main;
     }
 
@@ -38,14 +30,14 @@ public class PlayerLogin implements Listener {
             manager.setBanExpiration(0);
         } else {
             if (manager.isPerm()) {
-                event.disallow(PlayerLoginEvent.Result.KICK_BANNED, DisplayUtils.fixColors(config.getString("messages.perm-ban-reason")));
+                event.disallow(PlayerLoginEvent.Result.KICK_BANNED, DisplayUtil.fixColors(config.getString("messages.perm-ban-reason")));
             } else {
                 int minutes = manager.getBanTime();
                 if (minutes < 0) {
                     event.allow();
                     manager.setBanExpiration(0);
                 } else {
-                    event.disallow(PlayerLoginEvent.Result.KICK_BANNED, DisplayUtils.fixColors(config.getString("messages.temp-ban-reason").replace("%time%", DisplayUtils.minutesToTime(minutes, config))));
+                    event.disallow(PlayerLoginEvent.Result.KICK_BANNED, DisplayUtil.fixColors(config.getString("messages.temp-ban-reason").replace("%time%", DisplayUtil.minutesToTime(minutes, config))));
                 }
             }
 

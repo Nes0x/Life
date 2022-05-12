@@ -1,9 +1,9 @@
-package me.nes0x.life.utils;
+package me.nes0x.life.util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
-public class DisplayUtils {
+public class DisplayUtil {
 
     public static String fixColors(String text) {
         return ChatColor.translateAlternateColorCodes('&', text);

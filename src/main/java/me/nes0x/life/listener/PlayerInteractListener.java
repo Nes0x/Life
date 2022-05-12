@@ -1,8 +1,8 @@
-package me.nes0x.life.listeners;
+package me.nes0x.life.listener;
 
-import me.nes0x.life.Main;
-import me.nes0x.life.utils.ItemUtils;
-import me.nes0x.life.utils.LifeManager;
+import me.nes0x.life.Life;
+import me.nes0x.life.util.ItemUtil;
+import me.nes0x.life.util.LifeManager;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -12,12 +12,12 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import static me.nes0x.life.utils.DisplayUtils.fixColors;
+import static me.nes0x.life.util.DisplayUtil.fixColors;
 
-public class PlayerInteract implements Listener {
-    private final Main main;
+public class PlayerInteractListener implements Listener {
+    private final Life main;
 
-    public PlayerInteract(final Main main) {
+    public PlayerInteractListener(final Life main) {
         this.main = main;
     }
 
@@ -29,8 +29,8 @@ public class PlayerInteract implements Listener {
             if (player.getInventory().getItemInMainHand().getType() != Material.AIR) {
 
                 if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                    int number = config.getInt("add-life-item.number");
-                    ItemStack item = ItemUtils.getLifeAddItem(config, number);
+                    int number = config.getInt("add-life-item.life-to-add");
+                    ItemStack item = ItemUtil.getLifeAddItem(config, number);
                     if (player.getInventory().getItemInMainHand().getType() == item.getType()
                             &&
                         player.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equalsIgnoreCase(item.getItemMeta().getDisplayName())

@@ -1,4 +1,4 @@
-package me.nes0x.life.utils;
+package me.nes0x.life.util;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -8,9 +8,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 
-import static me.nes0x.life.utils.DisplayUtils.fixColors;
+import static me.nes0x.life.util.DisplayUtil.fixColors;
 
-public class ItemUtils {
+public class ItemUtil {
 
     public static ItemStack getLifeAddItem(FileConfiguration config, int number) {
         ItemStack item = new ItemStack(Material.valueOf(config.getString("add-life-item.material")), 1);

@@ -1,13 +1,13 @@
-package me.nes0x.life.utils;
+package me.nes0x.life.util;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.nes0x.life.Main;
+import me.nes0x.life.Life;
 import org.bukkit.OfflinePlayer;
 
-public class Placeholders extends PlaceholderExpansion {
-    private final Main main;
+public class Placeholder extends PlaceholderExpansion {
+    private final Life main;
 
-    public Placeholders(final Main main) {
+    public Placeholder(final Life main) {
         this.main = main;
     }
 
@@ -42,7 +42,7 @@ public class Placeholders extends PlaceholderExpansion {
 
         if (params.equalsIgnoreCase("life-heart") || params.equalsIgnoreCase("life-number")) {
             if (manager.getLife() == 0) {
-                return DisplayUtils.fixColors(main.getConfig().getString("messages.no-life-placeholder"));
+                return DisplayUtil.fixColors(main.getConfig().getString("messages.no-life-placeholder"));
             }
         }
 

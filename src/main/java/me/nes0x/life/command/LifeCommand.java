@@ -1,9 +1,8 @@
-package me.nes0x.life.commands;
+package me.nes0x.life.command;
 
-import me.nes0x.life.Main;
-import me.nes0x.life.utils.DisplayUtils;
-import me.nes0x.life.utils.ItemUtils;
-import me.nes0x.life.utils.LifeManager;
+import me.nes0x.life.Life;
+import me.nes0x.life.util.ItemUtil;
+import me.nes0x.life.util.LifeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -15,12 +14,12 @@ import org.bukkit.entity.Player;
 
 import java.util.logging.Logger;
 
-import static me.nes0x.life.utils.DisplayUtils.fixColors;
+import static me.nes0x.life.util.DisplayUtil.fixColors;
 
-public class Life implements CommandExecutor {
-    private final Main main;
+public class LifeCommand implements CommandExecutor {
+    private final Life main;
 
-    public Life(final Main main) {
+    public LifeCommand(final Life main) {
         this.main = main;
     }
 
@@ -31,6 +30,7 @@ public class Life implements CommandExecutor {
         OfflinePlayer target;
         LifeManager manager;
 
+        // /life set <nick> <number>
         if (sender instanceof ConsoleCommandSender && args.length == 3 && args[0].equalsIgnoreCase("set")) {
             Logger logger = Bukkit.getLogger();
             target = Bukkit.getOfflinePlayer(args[1]);
@@ -67,10 +67,11 @@ public class Life implements CommandExecutor {
 
         Player player = (Player) sender;
 
-
+        // /life
         if (args.length == 0) {
             manager = new LifeManager(player.getUniqueId(), main);
             player.sendMessage(fixColors(config.getString("messages.number-of-life").replace("%life%", String.valueOf(manager.getLife()))));
+        // /life reload
         } else if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
             if (!player.hasPermission("life.commands.reload")) {
                 player.sendMessage((fixColors(config.getString("messages.no-permission"))));
@@ -79,14 +80,16 @@ public class Life implements CommandExecutor {
             main.reloadConfig();
             main.saveConfig();
             player.sendMessage(fixColors(config.getString("messages.reload-message")));
+        // /life item
         } else if (args.length == 1 && args[0].equalsIgnoreCase("item"))  {
             if (!player.hasPermission("life.commands.item")) {
                 player.sendMessage((fixColors(config.getString("messages.no-permission"))));
                 return false;
             }
 
-            player.getInventory().addItem(ItemUtils.getLifeAddItem(config, config.getInt("add-life-item.number")));
+            player.getInventory().addItem(ItemUtil.getLifeAddItem(config, config.getInt("add-life-item.number")));
             player.sendMessage(fixColors(config.getString("messages.item-add-life-success")));
+        // /life <nick>
         } else if (args.length == 1) {
             target = Bukkit.getOfflinePlayer(args[0]);
             if (!target.hasPlayedBefore() && !target.isOnline()) {
@@ -95,6 +98,7 @@ public class Life implements CommandExecutor {
             }
             manager = new LifeManager(target.getUniqueId(), main);
             player.sendMessage(fixColors(config.getString("messages.number-of-life-player").replace("%player%", target.getName()).replace("%life%", String.valueOf(manager.getLife()))));
+        // /life <add/remove/set/give> <nick> <number>
         } else if (args.length == 3) {
             target = Bukkit.getOfflinePlayer(args[1]);
             if (!target.hasPlayedBefore() && !target.isOnline()) {

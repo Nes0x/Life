@@ -1,6 +1,6 @@
 name: Life
 version: '${project.version}'
-main: me.nes0x.life.Main
+main: me.nes0x.life.Life
 api-version: 1.13
 authors: [ Nes0x ]
 

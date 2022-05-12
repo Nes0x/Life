@@ -1,4 +1,4 @@
-package me.nes0x.life.commands;
+package me.nes0x.life.command;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

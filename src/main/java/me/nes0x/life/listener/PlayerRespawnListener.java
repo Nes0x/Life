@@ -1,30 +1,29 @@
-package me.nes0x.life.listeners;
+package me.nes0x.life.listener;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
-import me.nes0x.life.utils.DisplayUtils;
-import me.nes0x.life.utils.LifeManager;
+import me.nes0x.life.util.DisplayUtil;
+import me.nes0x.life.util.LifeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import me.nes0x.life.Main;
+import me.nes0x.life.Life;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
-import static me.nes0x.life.utils.DisplayUtils.fixColors;
+import static me.nes0x.life.util.DisplayUtil.fixColors;
 
-public class PlayerRespawn implements Listener {
-    private final Main main;
+public class PlayerRespawnListener implements Listener {
+    private final Life main;
 
-    public PlayerRespawn(final Main main) {
+    public PlayerRespawnListener(final Life main) {
         this.main = main;
     }
 
@@ -61,7 +60,7 @@ public class PlayerRespawn implements Listener {
                 long banDate = calendar.getTimeInMillis();
                 manager.setBanExpiration(banDate);
                 kickMessage = config.getString("messages.temp-ban-reason").replace("%time%",
-                        DisplayUtils.minutesToTime(
+                        DisplayUtil.minutesToTime(
                         manager.getBanTime(), config));
             }
 
