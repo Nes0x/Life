@@ -13,10 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.*;
-import java.nio.file.Files;
-
-import static me.nes0x.life.util.DisplayUtil.fixColors;
+import java.io.File;
 
 public final class Life extends JavaPlugin {
 
