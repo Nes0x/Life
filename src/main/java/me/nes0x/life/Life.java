@@ -21,7 +21,7 @@ public final class Life extends JavaPlugin {
     @Override
     public void onEnable() {
         new Metrics(this, 15178);
-        new UpdateUtil(this, 0).getVersion(version -> {
+        new UpdateUtil(this, 101976).getVersion(version -> {
             if (!getDescription().getVersion().equals(version)) {
                 getLogger().info(ChatColor.RED + "New update available! https://www.spigotmc.org/resources/");
             }
