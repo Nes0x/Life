@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public class LifeTabComplete implements TabCompleter {
+public class LifeCommandTabComplete implements TabCompleter {
     private final List<String> permissions =
             Arrays.asList(
                     "life.commands.add",

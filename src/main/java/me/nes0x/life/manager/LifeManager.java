@@ -1,4 +1,4 @@
-package me.nes0x.life.util;
+package me.nes0x.life.manager;
 
 import me.nes0x.life.Life;
 import org.bukkit.configuration.file.YamlConfiguration;

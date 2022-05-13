@@ -1,7 +1,7 @@
 package me.nes0x.life.listener;
 
 import me.nes0x.life.util.DisplayUtil;
-import me.nes0x.life.util.LifeManager;
+import me.nes0x.life.manager.LifeManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

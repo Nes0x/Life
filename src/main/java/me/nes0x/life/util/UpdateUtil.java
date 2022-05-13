@@ -11,12 +11,12 @@ import java.net.URL;
 import java.util.Scanner;
 
 // From: https://www.spigotmc.org/wiki/creating-an-update-checker-that-checks-for-updates
-public class Updater {
+public class UpdateUtil {
 
     private final Life main;
     private final int resourceId;
 
-    public Updater(Life main, int resourceId) {
+    public UpdateUtil(Life main, int resourceId) {
         this.main = main;
         this.resourceId = resourceId;
     }

@@ -1,8 +1,9 @@
-package me.nes0x.life.util;
+package me.nes0x.life.placeholderapi;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.nes0x.life.Life;
-import org.bukkit.ChatColor;
+import me.nes0x.life.manager.LifeManager;
+import me.nes0x.life.util.DisplayUtil;
 import org.bukkit.OfflinePlayer;
 
 public class Placeholder extends PlaceholderExpansion {
@@ -11,7 +12,6 @@ public class Placeholder extends PlaceholderExpansion {
     public Placeholder(final Life main) {
         this.main = main;
     }
-
 
     @Override
     public String getIdentifier() {

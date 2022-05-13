@@ -2,7 +2,7 @@ package me.nes0x.life.command;
 
 import me.nes0x.life.Life;
 import me.nes0x.life.util.ItemUtil;
-import me.nes0x.life.util.LifeManager;
+import me.nes0x.life.manager.LifeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
