@@ -35,7 +35,11 @@
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <shadedPattern>me.nes0x.life</shadedPattern>
+                            <shadedPattern>me.nes0x.life.bstats</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>me.mattstudios.mf</pattern>
+                            <shadedPattern>me.nes0x.life.mf</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -97,6 +101,11 @@
             <artifactId>worldguard-bukkit</artifactId>
             <version>7.0.5</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.mattstudios.utils</groupId>
+            <artifactId>matt-framework</artifactId>
+            <version>1.4.6</version>
         </dependency>
         <dependency>
             <groupId>org.bstats</groupId>

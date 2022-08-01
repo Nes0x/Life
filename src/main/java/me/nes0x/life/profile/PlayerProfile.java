@@ -1,6 +1,9 @@
-package me.nes0x.life.manager;
+package me.nes0x.life.profile;
 
-import me.nes0x.life.Life;
+import me.nes0x.life.config.ConfigManager;
+import me.nes0x.life.config.ConfigOption;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -8,35 +11,40 @@ import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class LifeManager {
-    private YamlConfiguration userData;
-    private final File user;
+public class PlayerProfile {
+    private final OfflinePlayer offlinePlayer;
+    private YamlConfiguration playerData;
+    private final File playerFile;
     private int life;
     private boolean perm;
     private long banExpiration;
 
-
-    public LifeManager(UUID playerUUID, Life main) {
-        user = new File(main.getDataFolder(), "./users/" + playerUUID + ".yml");
-        if (!user.exists()) {
+    protected PlayerProfile(UUID playerUUID, ConfigManager config) {
+        offlinePlayer = Bukkit.getOfflinePlayer(playerUUID);
+        playerFile = new File("./plugins/Life/players/" + playerUUID + ".yml");
+        if (!playerFile.exists()) {
             try {
-                user.createNewFile();
-                userData = YamlConfiguration.loadConfiguration(user);
-                userData.set("life", main.getConfig().getInt("settings.starting-life-number"));
-                userData.set("perm", false);
-                userData.set("ban-expiration", 0);
-                userData.save(user);
+                playerFile.createNewFile();
+                playerData = YamlConfiguration.loadConfiguration(playerFile);
+                playerData.set("life", config.getOption(ConfigOption.SETTINGS_STARTING_LIFE_NUMBER));
+                playerData.set("perm", false);
+                playerData.set("ban-expiration", 0);
+                playerData.save(playerFile);
             } catch (IOException exception) {
                 exception.printStackTrace();
             }
         } else {
-            userData = YamlConfiguration.loadConfiguration(user);
+            playerData = YamlConfiguration.loadConfiguration(playerFile);
         }
 
-        life = userData.getInt("life");
+        life = playerData.getInt("life");
         if (life < 0) life = 0;
-        perm = userData.getBoolean("perm");
-        banExpiration = userData.getLong("ban-expiration");
+        perm = playerData.getBoolean("perm");
+        banExpiration = playerData.getLong("ban-expiration");
+    }
+
+    public OfflinePlayer getOfflinePlayer() {
+        return offlinePlayer;
     }
 
     public int getLife() {
@@ -56,20 +64,20 @@ public class LifeManager {
     }
 
     public void setPerm(boolean perm) {
-        userData.set("perm", perm);
+        playerData.set("perm", perm);
         this.perm = perm;
         try {
-            userData.save(user);
+            playerData.save(playerFile);
         } catch (IOException exception) {
             exception.printStackTrace();
         }
     }
 
     public void setBanExpiration(long banExpiration) {
-        userData.set("ban-expiration", banExpiration);
+        playerData.set("ban-expiration", banExpiration);
         this.banExpiration = banExpiration;
         try {
-            userData.save(user);
+            playerData.save(playerFile);
         } catch (IOException exception) {
             exception.printStackTrace();
         }
@@ -80,10 +88,10 @@ public class LifeManager {
             throw new IllegalStateException();
         }
 
-        userData.set("life", life);
+        playerData.set("life", life);
         this.life = life;
         try {
-            userData.save(user);
+            playerData.save(playerFile);
         } catch (IOException exception) {
             exception.printStackTrace();
         }
@@ -94,28 +102,22 @@ public class LifeManager {
             setLife(0);
             return;
         }
-
-        userData.set("life", life - number);
+        playerData.set("life", life - number);
         life -= number;
         try {
-            userData.save(user);
+            playerData.save(playerFile);
         } catch (IOException exception) {
            exception.printStackTrace();
         }
     }
 
     public void addLife(int number) {
-        if (number <= 0) {
-            throw new IllegalStateException();
-        }
-
-        userData.set("life", life + number);
+        playerData.set("life", life + number);
         life += number;
         try {
-            userData.save(user);
+            playerData.save(playerFile);
         } catch (IOException exception) {
             exception.printStackTrace();
         }
     }
-
 }

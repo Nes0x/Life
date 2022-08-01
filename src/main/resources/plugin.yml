@@ -14,25 +14,25 @@ commands:
       - zycia
 
 permissions:
-  life.commands.add:
+  life.command.add:
     description: Access to command /life add <nick> <number>
     default: op
-  life.commands.remove:
+  life.command.remove:
     description: Access to command /life remove <nick> <number>
     default: op
-  life.commands.set:
+  life.command.set:
     description: Access to command /life set <nick <number>
     default: op
-  life.commands.item:
+  life.command.item:
     description: Access to command /life item
     default: op
-  life.commands.reload:
+  life.command.reload:
     description: Access to command /life reload
     default: op
-  life.commands.give:
+  life.command.give:
     description: Access to command /life give <nick> <number>
     default: op
-  life.commands.*:
+  life.command.*:
     description: Access to all commands
     default: op
     children:

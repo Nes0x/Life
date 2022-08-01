@@ -12,7 +12,6 @@ import java.util.Scanner;
 
 // From: https://www.spigotmc.org/wiki/creating-an-update-checker-that-checks-for-updates
 public class UpdateUtil {
-
     private final Life main;
     private final int resourceId;
 

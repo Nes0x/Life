@@ -1,10 +1,12 @@
 package me.nes0x.life.listener;
 
-import me.nes0x.life.Life;
+import me.nes0x.life.config.ConfigManager;
+import me.nes0x.life.config.ConfigMessage;
+import me.nes0x.life.config.ConfigOption;
+import me.nes0x.life.profile.PlayerProfile;
+import me.nes0x.life.profile.PlayerProfileManager;
 import me.nes0x.life.util.ItemUtil;
-import me.nes0x.life.manager.LifeManager;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,44 +14,42 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import static me.nes0x.life.util.DisplayUtil.fixColors;
-
 public class PlayerInteractListener implements Listener {
-    private final Life main;
+    private final PlayerProfileManager playerProfileManager;
+    private final ConfigManager config;
 
-    public PlayerInteractListener(final Life main) {
-        this.main = main;
+    public PlayerInteractListener(final PlayerProfileManager playerProfileManager, final ConfigManager config) {
+        this.playerProfileManager = playerProfileManager;
+        this.config = config;
     }
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        FileConfiguration config = main.getConfig();
-        if (config.getBoolean("add-life-item.enabled")) {
-            Player player = event.getPlayer();
-            if (player.getInventory().getItemInMainHand().getType() != Material.AIR) {
+        Player player = event.getPlayer();
 
-                if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                    int number = config.getInt("add-life-item.life-to-add");
-                    ItemStack item = ItemUtil.getLifeAddItem(config, number);
-                    if (player.getInventory().getItemInMainHand().getType() == item.getType()
-                            &&
-                        player.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equalsIgnoreCase(item.getItemMeta().getDisplayName())
-                    ) {
-                        event.setCancelled(true);
-                        LifeManager manager = new LifeManager(player.getUniqueId(), main);
-                        manager.addLife(number);
-                        player.getInventory().removeItem(item);
-                        if (config.getBoolean("add-life-item.enable-message-on-click")) {
-                            player.sendMessage(fixColors(config.getString("messages.message-on-click").replace("%number%", String.valueOf(number))));
-                        }
-                    }
+        if (player.getInventory().getItemInMainHand().getType() != Material.AIR
+                && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
+            int number = (int) config.getOption(ConfigOption.ADD_LIFE_ITEM_LIFE_TO_ADD);
+            ItemStack item = ItemUtil.getLifeAddItem(config, number);
+            if (player.getInventory().getItemInMainHand().getType() == item.getType()
+                    &&
+                player.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equalsIgnoreCase(item.getItemMeta().getDisplayName())
+            ) {
+                if (!(boolean)config.getOption(ConfigOption.ADD_LIFE_ITEM_ENABLED)) {
+                    return;
+                }
+                event.setCancelled(true);
+                PlayerProfile profile = playerProfileManager.getByUUID(player.getUniqueId());
+                if (profile == null) {
+                    return;
+                }
+                profile.addLife(number);
+                player.getInventory().removeItem(item);
+                if ((boolean) config.getOption(ConfigOption.ADD_LIFE_ITEM_ENABLE_MESSAGE_ON_CLICK)) {
+                    player.sendMessage(config.getMessage(ConfigMessage.MESSAGE_ON_CLICK)
+                            .replace("%number%", String.valueOf(number)));
                 }
             }
         }
-
-
     }
-
-
-
 }

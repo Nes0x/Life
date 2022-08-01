@@ -1,55 +1,51 @@
 package me.nes0x.life.listener;
 
+import me.nes0x.life.config.ConfigManager;
+import me.nes0x.life.config.ConfigMessage;
+import me.nes0x.life.profile.PlayerProfile;
+import me.nes0x.life.profile.PlayerProfileManager;
 import me.nes0x.life.util.DisplayUtil;
-import me.nes0x.life.manager.LifeManager;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
-import me.nes0x.life.Life;
 
 public class PlayerLoginListener implements Listener {
-    private final Life main;
+    private final PlayerProfileManager playerProfileManager;
+    private final ConfigManager config;
 
-    public PlayerLoginListener(final Life main) {
-        this.main = main;
+    public PlayerLoginListener(final PlayerProfileManager playerProfileManager, final ConfigManager config) {
+        this.playerProfileManager = playerProfileManager;
+        this.config = config;
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerLogin(PlayerLoginEvent event) {
-        FileConfiguration config = main.getConfig();
         Player player = event.getPlayer();
-        LifeManager manager = new LifeManager(player.getUniqueId(), main);
+        PlayerProfile profile = playerProfileManager.getByUUID(player.getUniqueId());
 
-
-        if (manager.getLife() > 0) {
-            event.allow();
-            manager.setPerm(false);
-            manager.setBanExpiration(0);
-        } else {
-            if (manager.isPerm()) {
-                event.disallow(PlayerLoginEvent.Result.KICK_BANNED, DisplayUtil.fixColors(config.getString("messages.perm-ban-reason")));
-            } else {
-                int minutes = manager.getBanTime();
-                if (minutes < 0) {
-                    event.allow();
-                    manager.setBanExpiration(0);
-                } else {
-                    event.disallow(PlayerLoginEvent.Result.KICK_BANNED, DisplayUtil.fixColors(config.getString("messages.temp-ban-reason").replace("%time%", DisplayUtil.minutesToTime(minutes, config))));
-                }
-            }
-
-
-
-
+        if (profile == null) {
+            return;
         }
 
-
-
-
-
+        if (profile.getLife() > 0) {
+            event.allow();
+            profile.setPerm(false);
+            profile.setBanExpiration(0);
+        } else {
+            if (profile.isPerm()) {
+                event.disallow(PlayerLoginEvent.Result.KICK_BANNED, config.getMessage(ConfigMessage.PERM_BAN_REASON));
+            } else {
+                int minutes = profile.getBanTime();
+                if (minutes < 0) {
+                    event.allow();
+                    profile.setBanExpiration(0);
+                } else {
+                    event.disallow(PlayerLoginEvent.Result.KICK_BANNED, config.getMessage(ConfigMessage.TEMP_BAN_REASON)
+                            .replace("%time%", DisplayUtil.minutesToTime(minutes, config)));
+                }
+            }
+        }
     }
-
 }

@@ -1,184 +1,161 @@
 package me.nes0x.life.command;
 
-import me.nes0x.life.Life;
+import me.mattstudios.mf.annotations.*;
+import me.mattstudios.mf.base.CommandBase;
+import me.nes0x.life.config.ConfigManager;
+import me.nes0x.life.config.ConfigMessage;
+import me.nes0x.life.config.ConfigOption;
+import me.nes0x.life.profile.PlayerProfile;
+import me.nes0x.life.profile.PlayerProfileManager;
 import me.nes0x.life.util.ItemUtil;
-import me.nes0x.life.manager.LifeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.logging.Logger;
 
-import static me.nes0x.life.util.DisplayUtil.fixColors;
+@Command("life")
+public class LifeCommand extends CommandBase {
+    private final PlayerProfileManager playerProfileManager;
+    private final ConfigManager config;
 
-public class LifeCommand implements CommandExecutor {
-    private final Life main;
-
-    public LifeCommand(final Life main) {
-        this.main = main;
+    public LifeCommand(final PlayerProfileManager playerProfileManager, final ConfigManager config) {
+        this.playerProfileManager = playerProfileManager;
+        this.config = config;
     }
 
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        FileConfiguration config = main.getConfig();
-        OfflinePlayer target;
-        LifeManager manager;
-
-        // /life set <nick> <number>
-        if (sender instanceof ConsoleCommandSender && args.length == 3 && args[0].equalsIgnoreCase("set")) {
-            Logger logger = Bukkit.getLogger();
-            target = Bukkit.getOfflinePlayer(args[1]);
-            if (!target.hasPlayedBefore() && !target.isOnline()) {
-                logger.info(fixColors(config.getString("messages.unknown-player")));
-                return true;
-            }
-
-            int number;
-
-            try {
-                number = Integer.parseInt(args[2]);
-            }  catch (NumberFormatException exception) {
-                logger.info(fixColors(config.getString("messages.number-exception")));
-                return false;
-            }
-
-            if (number < 0) {
-                logger.info(fixColors(config.getString("messages.life-number-exception")));
-                return false;
-            }
-
-            manager = new LifeManager(target.getUniqueId(), main);
-            manager.setLife(number);
-            logger.info(fixColors(config.getString("messages.set-life-success").replace("%player%", target.getName()).replace("%number%", String.valueOf(number))));
-            return true;
-        }
-
-        if (!(sender instanceof Player)) {
-            Bukkit.getLogger().info(fixColors(config.getString("messages.command-in-console")));
-            return true;
-        }
-
-
-        Player player = (Player) sender;
-
-        // /life
-        if (args.length == 0) {
-            manager = new LifeManager(player.getUniqueId(), main);
-            player.sendMessage(fixColors(config.getString("messages.number-of-life").replace("%life%", String.valueOf(manager.getLife()))));
-        // /life reload
-        } else if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-            if (!player.hasPermission("life.commands.reload")) {
-                player.sendMessage((fixColors(config.getString("messages.no-permission"))));
-                return false;
-            }
-            main.reloadConfig();
-            main.saveConfig();
-            player.sendMessage(fixColors(config.getString("messages.reload-message")));
-        // /life item
-        } else if (args.length == 1 && args[0].equalsIgnoreCase("item"))  {
-            if (!player.hasPermission("life.commands.item")) {
-                player.sendMessage((fixColors(config.getString("messages.no-permission"))));
-                return false;
-            }
-
-            player.getInventory().addItem(ItemUtil.getLifeAddItem(config, config.getInt("add-life-item.number")));
-            player.sendMessage(fixColors(config.getString("messages.item-add-life-success")));
-        // /life <nick>
-        } else if (args.length == 1) {
-            target = Bukkit.getOfflinePlayer(args[0]);
-            if (!target.hasPlayedBefore() && !target.isOnline()) {
-                player.sendMessage(fixColors(config.getString("messages.unknown-player")));
-                return false;
-            }
-            manager = new LifeManager(target.getUniqueId(), main);
-            player.sendMessage(fixColors(config.getString("messages.number-of-life-player").replace("%player%", target.getName()).replace("%life%", String.valueOf(manager.getLife()))));
-        // /life <add/remove/set/give> <nick> <number>
-        } else if (args.length == 3) {
-            target = Bukkit.getOfflinePlayer(args[1]);
-            if (!target.hasPlayedBefore() && !target.isOnline()) {
-                player.sendMessage(fixColors(config.getString("messages.unknown-player")));
-                return false;
-            }
-            manager = new LifeManager(target.getUniqueId(), main);
-            int number;
-            try {
-                number = Integer.parseInt(args[2]);
-            }  catch (NumberFormatException exception) {
-                player.sendMessage(fixColors(config.getString("messages.number-exception")));
-                return false;
-            }
-
-            if (number < 0) {
-                player.sendMessage(fixColors(config.getString("messages.life-number-exception")));
-                return false;
-            }
-
-
-            switch (args[0].toLowerCase()) {
-                case "add":
-                    if (!player.hasPermission("life.commands.add")) {
-                        player.sendMessage(fixColors(config.getString("messages.no-permission")));
-                        return false;
-                    }
-                    manager.addLife(number);
-                    player.sendMessage(fixColors(config.getString("messages.add-life-success").replace("%player%", target.getName()).replace("%number%", String.valueOf(number))));
-                    break;
-                case "remove":
-                    if (!player.hasPermission("life.commands.remove")) {
-                        player.sendMessage(fixColors(config.getString("messages.no-permission")));
-                        return false;
-                    }
-                    if ((manager.getLife() - number) < 0) number = manager.getLife();
-                    manager.removeLife(number);
-                    player.sendMessage(fixColors(config.getString("messages.remove-life-success").replace("%player%", target.getName()).replace("%number%", String.valueOf(number))));
-                    break;
-                case "set":
-                    if (!player.hasPermission("life.commands.set")) {
-                        player.sendMessage(fixColors(config.getString("messages.no-permission")));
-                        return false;
-                    }
-                    manager.setLife(number);
-                    player.sendMessage(fixColors(config.getString("messages.set-life-success").replace("%player%", target.getName()).replace("%number%", String.valueOf(number))));
-                    break;
-                case "give":
-                    if (!player.hasPermission("life.commands.give")) {
-                        player.sendMessage(fixColors(config.getString("messages.no-permission")));
-                        return false;
-                    }
-                    if (target.getUniqueId().equals(player.getUniqueId())) {
-                        player.sendMessage(fixColors(config.getString("messages.self-give-life")));
-                        return false;
-                    }
-
-                    manager = new LifeManager(player.getUniqueId(), main);
-                    if (manager.getLife() > number || (manager.getLife() - number) <= 1) {
-                        manager.removeLife(number);
-                        manager = new LifeManager(target.getUniqueId(), main);
-                        manager.addLife(number);
-                        player.sendMessage(fixColors(config.getString("messages.give-life-success").replace("%target%", args[1]).replace("%number%", String.valueOf(number))));
-                        if (target.isOnline()) {
-                            target.getPlayer().sendMessage(fixColors(config.getString("messages.give-life-success-to-target").replace("%player%", player.getName()).replace("%number%", String.valueOf(number))));
-                        }
-                    } else {
-                        player.sendMessage(fixColors(config.getString("messages.give-life-error")));
-                    }
-
-                    break;
-                default:
-                    player.sendMessage(fixColors(config.getString("messages.invalid-usage")));
-                    return false;
-            }
+    @Default
+    @Completion("#players")
+    public void life(final Player player, @Optional final String targetNick) {
+        PlayerProfile playerProfile = null;
+        String nick = "";
+        if (targetNick == null) {
+            playerProfile = playerProfileManager.getByUUID(player.getUniqueId());
+            nick = player.getName();
         } else {
-            player.sendMessage(fixColors(config.getString("messages.invalid-usage")));
+            OfflinePlayer targetProfile = Bukkit.getOfflinePlayer(targetNick);
+            if (targetProfile.hasPlayedBefore() || targetProfile.isOnline()) {
+                playerProfile = playerProfileManager.getByUUID(targetProfile.getUniqueId());
+                nick = targetNick;
+            }
         }
 
+        if (playerProfile == null) {
+            player.sendMessage(config.getMessage(ConfigMessage.UNKNOWN_PLAYER));
+            return;
+        }
 
-        return true;
+        player.sendMessage(config.getMessage(ConfigMessage.NUMBER_OF_LIFE).replace("%player%", nick).replace("%life%", String.valueOf(playerProfile.getLife())));
+    }
+
+    @SubCommand("add")
+    @Permission("life.command.add")
+    @Completion({"#players", "#range:1-100"})
+    public void addLife(final Player player, final PlayerProfile targetProfile, final Integer amount) {
+        if (targetProfile == null) {
+            player.sendMessage(config.getMessage(ConfigMessage.UNKNOWN_PLAYER));
+            return;
+        }
+        try {
+            if (amount <= 0) {
+                player.sendMessage(config.getMessage(ConfigMessage.LIFE_NUMBER_EXCEPTION));
+                return;
+            }
+        } catch (Exception exception) {
+            player.sendMessage(config.getMessage(ConfigMessage.NUMBER_EXCEPTION));
+            return;
+        }
+        targetProfile.addLife(amount);
+        player.sendMessage(config.getMessage(ConfigMessage.ADD_LIFE_SUCCESS).replace("%player%", targetProfile.getOfflinePlayer().getName()).replace("%number%", String.valueOf(amount)));
+    }
+
+    @SubCommand("remove")
+    @Permission("life.command.remove")
+    @Completion({"#players", "#range:1-100"})
+    public void removeLife(final Player player, final PlayerProfile targetProfile, final Integer amount) {
+        if (targetProfile == null) {
+            player.sendMessage(config.getMessage(ConfigMessage.UNKNOWN_PLAYER));
+            return;
+        }
+        try {
+            if (amount <= 0 || (targetProfile.getLife() - amount) < 0) {
+                player.sendMessage(config.getMessage(ConfigMessage.LIFE_NUMBER_EXCEPTION));
+                return;
+            }
+        } catch (Exception exception) {
+            player.sendMessage(config.getMessage(ConfigMessage.NUMBER_EXCEPTION));
+            return;
+        }
+        targetProfile.removeLife(amount);
+        player.sendMessage(config.getMessage(ConfigMessage.REMOVE_LIFE_SUCCESS).replace("%player%", targetProfile.getOfflinePlayer().getName()).replace("%number%", String.valueOf(amount)));
+    }
+
+    @SubCommand("set")
+    @Permission("life.command.set")
+    @Completion({"#players", "#range:1-100"})
+    public void setLife(final Player player, final PlayerProfile targetProfile, final Integer amount) {
+        if (targetProfile == null) {
+            player.sendMessage(config.getMessage(ConfigMessage.UNKNOWN_PLAYER));
+            return;
+        }
+        try {
+            if (amount < 0) {
+                player.sendMessage(config.getMessage(ConfigMessage.LIFE_NUMBER_EXCEPTION));
+                return;
+            }
+        } catch (Exception exception) {
+            player.sendMessage(config.getMessage(ConfigMessage.NUMBER_EXCEPTION));
+            return;
+        }
+        targetProfile.setLife(amount);
+        player.sendMessage(config.getMessage(ConfigMessage.SET_LIFE_SUCCESS).replace("%player%", targetProfile.getOfflinePlayer().getName()).replace("%number%", String.valueOf(amount)));
+    }
+
+    @SubCommand("give")
+    @Permission("life.command.give")
+    @Completion({"#players", "#range:1-100"})
+    public void giveLife(final Player player, final PlayerProfile targetProfile, final Integer amount) {
+        if (targetProfile == null) {
+            player.sendMessage(config.getMessage(ConfigMessage.UNKNOWN_PLAYER));
+            return;
+        }
+
+        if (targetProfile.getOfflinePlayer().getUniqueId().equals(player.getUniqueId())) {
+            player.sendMessage(config.getMessage(ConfigMessage.SELF_GIVE_LIFE));
+            return;
+        }
+
+        PlayerProfile playerProfile = playerProfileManager.getByUUID(player.getUniqueId());
+
+        try {
+            if (targetProfile.getLife() > amount || (targetProfile.getLife() - amount) >= 1 || playerProfile == null) {
+                player.sendMessage(config.getMessage(ConfigMessage.GIVE_LIFE_ERROR));
+                return;
+            }
+        } catch (Exception exception) {
+            player.sendMessage(config.getMessage(ConfigMessage.NUMBER_EXCEPTION));
+            return;
+        }
+
+        playerProfile.removeLife(amount);
+        targetProfile.addLife(amount);
+
+        player.sendMessage(config.getMessage(ConfigMessage.GIVE_LIFE_SUCCESS).replace("%targetProfile%", targetProfile.getOfflinePlayer().getName()).replace("%number%", String.valueOf(amount)));
+        if (targetProfile.getOfflinePlayer().isOnline()) {
+            targetProfile.getOfflinePlayer().getPlayer().sendMessage(config.getMessage(ConfigMessage.GIVE_LIFE_SUCCESS_TO_TARGET).replace("%player%", player.getName()).replace("%number%", String.valueOf(amount)));
+        }
+    }
+
+    @SubCommand("item")
+    @Permission("life.command.item")
+    public void item(final Player player) {
+        player.getInventory().addItem(ItemUtil.getLifeAddItem(config, (int) config.getOption(ConfigOption.ADD_LIFE_ITEM_LIFE_TO_ADD)));
+        player.sendMessage(config.getMessage(ConfigMessage.ITEM_ADD_LIFE_SUCCESS));
+    }
+
+    @SubCommand("reload")
+    @Permission("life.command.reload")
+    public void reload(final Player player) {
+        config.reload();
+        player.sendMessage(config.getMessage(ConfigMessage.RELOAD_MESSAGE));
     }
 }
