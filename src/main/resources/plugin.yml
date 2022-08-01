@@ -8,20 +8,16 @@ softdepend:
   - PlaceholderAPI
   - WorldGuard
 
-commands:
-  life:
-    aliases:
-      - zycia
 
 permissions:
   life.command.add:
-    description: Access to command /life add <nick> <number>
+    description: Access to command /life add <nick> <amount>
     default: op
   life.command.remove:
-    description: Access to command /life remove <nick> <number>
+    description: Access to command /life remove <nick> <amount>
     default: op
   life.command.set:
-    description: Access to command /life set <nick <number>
+    description: Access to command /life set <nick <amount>
     default: op
   life.command.item:
     description: Access to command /life item
@@ -30,15 +26,15 @@ permissions:
     description: Access to command /life reload
     default: op
   life.command.give:
-    description: Access to command /life give <nick> <number>
+    description: Access to command /life give <nick> <amount>
     default: op
   life.command.*:
     description: Access to all commands
     default: op
     children:
-      life.commands.add: true
-      life.commands.remove: true
-      life.commands.set: true
-      life.commands.item: true
-      life.commands.reload: true
-      life.commands.give: true
+      life.command.add: true
+      life.command.remove: true
+      life.command.set: true
+      life.command.item: true
+      life.command.reload: true
+      life.command.give: true
